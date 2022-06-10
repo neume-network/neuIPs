@@ -7,7 +7,7 @@ created: 2022-06-10
 ---
 
 
-## What is an neuIP?
+## What is a neuIP?
 
 neuIP stands for neume Improvement Proposal. A neuIP is a design document providing information to the neume community, or describing a new feature for neume or its processes or environment. The neuIP should provide a concise technical specification of the feature and a rationale for the feature. The neuIP author is responsible for building consensus within the community and documenting dissenting opinions.
 
