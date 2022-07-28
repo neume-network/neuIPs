@@ -45,21 +45,85 @@ The index is represented by a directed acyclic graph. Content-addressing must
 be used as the primary representation for connecting nodes in the graph, it
 ensures the immutability and permanence of the data.
 
+### Primitive Type Encoding into Binary
+
+To create the index file we need to encode primitive types (e.g. `uint256`) in
+binary representation. As we're defining the file format using fixed-length header
+structures, a binary encoding of primitive types with fixed-length is helpful
+as it allows us to define structures for direct data access (zero-copy) without
+the need for parsing a file first.
+
+#### `uint256` Binary representation
+
+To represent a `uint256` in binary, we use a Big-Endian order with a fixed
+length of 32 bytes. Below are implementations for encoding and decoding:
+
+```js
+import BN from "bn.js";
+
+const endian = "be"; // big-endian
+const lengthBytes = 32;
+
+export function encode(/* string: */ uint256) {
+  const num = new BN(uint256);
+  if (num.isNeg()) {
+    throw new Error(`input is out of range (negative): ${uint256}`);
+  }
+  return num.toBuffer(endian, lengthBytes);
+}
+
+export function decode(/* Buffer: */ buf) {
+  return new BN(buf).toString();
+}
+```
+
+#### `bytes32` Binary representation
+
+String values can be represented as binary in fixed-length ASCII encoding.
+
+```js
+import { Buffer } from "buffer";
+
+const encoding = "ascii";
+const lengthBytes = 32;
+
+export function encode(/* string: */ value) {
+  const buf = Buffer.alloc(lengthBytes);
+  const valueBuf = Buffer.from(value, encoding);
+
+  if (valueBuf.length > lengthBytes) {
+    throw new Error(`input is out of range (too long): ${valueBuf.length}`);
+  }
+
+  valueBuf.copy(buf, buf.length - valueBuf.length);
+  return buf;
+}
+
+export function decode(/* Buffer: */ buf) {
+  if (buf.length > lengthBytes) {
+    throw new Error(`input is out of range (too long): ${buf.length}`);
+  }
+  return buf.toString(encoding);
+}
+```
+
+### Root Node
+
 The DAG's root node is segmented conceptually into "rows" and hence accessible
 without memory overhead. A row is 64 bytes long. However, the first 64 bytes of
 the file are reserved for metadata storage.
 
-| Name               | Size     | Type      | Comment                                                                                                                                                                                                                                                               |
-| ------------------ | -------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Start Block Number | 32 bytes | `Integer` | The Start Block Number is the file's first block number. As a block number directly translates to the position in the file, its importance arises from now having to wastefully-reserve a lot of space when e.g. indexing the Ethereum blockchain from today onwards. |
-| Reserved           | 32 bytes | Zeros     | Reserved to add more metadata at a later point in time                                                                                                                                                                                                                |
+| Name               | Size     | Representation | Comment                                                                                                                                                                                                                                                               |
+| ------------------ | -------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Start Block Number | 32 bytes | `uint256`      | The Start Block Number is the file's first block number. As a block number directly translates to the position in the file, its importance arises from now having to wastefully-reserve a lot of space when e.g. indexing the Ethereum blockchain from today onwards. |
+| Reserved           | 32 bytes | Zeros          | Reserved to add more metadata at a later point in time                                                                                                                                                                                                                |
 
 Block numbers are ordered from lowest to highest.
 
-| Name         | Size     | Type                                                                                                |
-| ------------ | -------- | --------------------------------------------------------------------------------------------------- |
-| Block Number | 32 bytes | `Integer`                                                                                           |
-| Child Node   | 32 bytes | `String` (e.g. [IPFS CIDv1](https://docs.ipfs.tech/concepts/content-addressing/#identifier-formats) |
+| Name         | Size     | Representation                                                                              |
+| ------------ | -------- | ------------------------------------------------------------------------------------------- |
+| Block Number | 32 bytes | `uint256`                                                                                   |
+| Child Node   | 32 bytes | TBD: A particular fixed-length multihash given that IPFS CIDs can be quasi arbitrarily long |
 
 The following JavaScript implementation translates from an Ethereum block number
 to the offset of the row in the file:
@@ -67,17 +131,41 @@ to the offset of the row in the file:
 ```js
 import assert from "assert";
 
-const rowLength = 64;
-const metadataOffsetBytes = rowLength;
+const rowLengthBytes = 64;
+const metadataOffsetBytes = rowLengthBytes;
 
 export function blockNumberToOffset(startBlockNumber, blockNumber) {
   assert(
     startBlockNumber <= blockNumber,
     `startBlockNumber "${startBlockNumber}" must be less or equal than first block number "${blockNumber}"`
   );
-  return metadataOffsetBytes + (blockNumber - startBlockNumber) * rowLength;
+  return (
+    metadataOffsetBytes + (blockNumber - startBlockNumber) * rowLengthBytes
+  );
 }
 ```
+
+## Child Nodes
+
+By retrieving the `Child Node` identifier from a Root Node through e.g. the
+file system or a network, an equivalent row-based file format is implemented.
+Each row is 64 bytes long. With the first row (64 bytes) being reserved for
+metadata storage.
+
+| Name           | Size     | Representation | Comment                                                |
+| -------------- | -------- | -------------- | ------------------------------------------------------ |
+| Max Row Number | 32 bytes | `uint256`      | The number of rows in the file                         |
+| Reserved       | 32 bytes | Zeros          | Reserved to add more metadata at a later point in time |
+
+As all identifiers related to NFT minting are order-neutral, we're suggesting
+an externally-computable offset formula mapping from an NFT contract's
+`address` and `tokenID` to a row in the Child Node. We're computing a 32 byte
+Keccak-256 hash through the following canonical input:
+
+| Name             | Size     | Representation | Comment                                                       |
+| ---------------- | -------- | -------------- | ------------------------------------------------------------- |
+| Contract address | 20 bytes | `bytes32`      | An EIP-721 compliant contract address without the `0x` prefix |
+| token ID         | 32 bytes | `uint256`      | An EIP-721's token ID                                         |
 
 ## Reference Implemenation
 

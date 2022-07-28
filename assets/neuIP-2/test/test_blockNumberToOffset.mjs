@@ -1,6 +1,6 @@
 import test from "ava";
 
-import { blockNumberToOffset } from "../src/index.mjs";
+import { blockNumberToOffset } from "../src/blockNumberToOffset.mjs";
 
 test("if blockNumberToOffset fails if startBlockNumber is too low", (t) => {
   const startBlockNumber = 1;
