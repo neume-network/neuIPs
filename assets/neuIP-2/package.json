@@ -1,0 +1,14 @@
+{
+  "name": "neuip-2",
+  "version": "0.0.1",
+  "description": "Functions to implement neuIP-2",
+  "main": "index.mjs",
+  "scripts": {
+    "test": "ava"
+  },
+  "author": "Tim Daubenschütz <tim@daubenschuetz.de> (https://timdaub.github.io/)",
+  "license": "GPL-3.0-only",
+  "dependencies": {
+    "ava": "4.3.1"
+  }
+}
