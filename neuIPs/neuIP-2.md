@@ -79,15 +79,15 @@ export function decode(/* Buffer: */ buf) {
 
 #### `bytes32` Binary representation
 
-String values can be represented as binary in fixed-length ASCII encoding.
+We represent hexadecimal byte arrays with fixed-length of 32 bytes as follows:
 
 ```js
 import { Buffer } from "buffer";
 
-const encoding = "ascii";
+const encoding = "hex";
 const lengthBytes = 32;
 
-export function encode(/* string: */ value) {
+export function encode(/* hex string: */ value) {
   const buf = Buffer.alloc(lengthBytes);
   const valueBuf = Buffer.from(value, encoding);
 

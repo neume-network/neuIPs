@@ -1,9 +1,9 @@
 import { Buffer } from "buffer";
 
-const encoding = "ascii";
+const encoding = "hex";
 const lengthBytes = 32;
 
-export function encode(/* string: */ value) {
+export function encode(/* hex string: */ value) {
   const buf = Buffer.alloc(lengthBytes);
   const valueBuf = Buffer.from(value, encoding);
 
