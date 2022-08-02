@@ -63,15 +63,15 @@ const endian = "be"; // big-endian
 const lengthBytes = 32;
 
 export function encode(/* string: */ uint256) {
-	const num = new BN(uint256);
-	if (num.isNeg()) {
-		throw new Error(`input is out of range (negative): ${uint256}`);
-	}
-	return num.toBuffer(endian, lengthBytes);
+  const num = new BN(uint256);
+  if (num.isNeg()) {
+    throw new Error(`input is out of range (negative): ${uint256}`);
+  }
+  return num.toBuffer(endian, lengthBytes);
 }
 
 export function decode(/* Buffer: */ buf) {
-	return new BN(buf).toString();
+  return new BN(buf).toString();
 }
 ```
 
@@ -86,22 +86,22 @@ const encoding = "hex";
 const lengthBytes = 32;
 
 export function encode(/* hex string: */ value) {
-	const buf = Buffer.alloc(lengthBytes);
-	const valueBuf = Buffer.from(value, encoding);
+  const buf = Buffer.alloc(lengthBytes);
+  const valueBuf = Buffer.from(value, encoding);
 
-	if (valueBuf.length > lengthBytes) {
-		throw new Error(`input is out of range (too long): ${valueBuf.length}`);
-	}
+  if (valueBuf.length > lengthBytes) {
+    throw new Error(`input is out of range (too long): ${valueBuf.length}`);
+  }
 
-	valueBuf.copy(buf, buf.length - valueBuf.length);
-	return buf;
+  valueBuf.copy(buf, buf.length - valueBuf.length);
+  return buf;
 }
 
 export function decode(/* Buffer: */ buf) {
-	if (buf.length > lengthBytes) {
-		throw new Error(`input is out of range (too long): ${buf.length}`);
-	}
-	return buf.toString(encoding);
+  if (buf.length > lengthBytes) {
+    throw new Error(`input is out of range (too long): ${buf.length}`);
+  }
+  return buf.toString(encoding);
 }
 ```
 
@@ -136,21 +136,22 @@ block file                            │
 ```
 
 Here, the **index file** points to the data `jklmn` in the **block file** at
-the `offset=9` with `length=5`.
+the `offset=9` with `length=5`. Critically, it also points to `abcdefghi` with
+`offset=0` and `length=8` but we've omitted the arrow in the schema graphic.
 
 ### Root Node
 
-The DAG's root node is segmented conceptually into "rows" and hence accessible
-without memory overhead. A row is 64 bytes long. However, the first 64 bytes of
-the file are reserved for the root node's header.
+The DAG's root node is segmented conceptually into an index and a block file.
+The index file reserves 64 bytes (one row) for metadata and the following
+schematic header is instructive for its interpretation and parsing:
 
-| Name               | Size     | Representation | Comment                                                                                                                                                                                                                                                               |
-| ------------------ | -------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Start Block Number | 32 bytes | `uint256`      | The Start Block Number is the file's first block number. As a block number directly translates to the position in the file, its importance arises from now having to wastefully-reserve a lot of space when e.g. indexing the Ethereum blockchain from today onwards. |
-| Reserved           | 32 bytes | Zeros          | Reserved to add more metadata at a later point in time                                                                                                                                                                                                                |
+| Name                 | Size     | Representation | Comment                                                                                                                                                                                                                                                                                                                 |
+| -------------------- | -------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Start Block Number` | 32 bytes | `uint256`      | `Start Block Number` represents the's first block number in the index with the lowest `offset`. As a block number directly translates to a position in the index file, its importance arises from not having to wastefully-reserve a lot of sparse space when e.g. indexing the Ethereum blockchain from today onwards. |
+| Reserved             | 32 bytes | Zeros          | Reserved to add more metadata at a later point in time                                                                                                                                                                                                                                                                  |
 
-Following the calculation below, inferring the index file's byte offset is possible
-by plugging in `Start Block Number` and the `Block Number`:
+Following the calculation below, inferring the index file's byte row-based
+offset is possible by plugging in `Start Block Number` and the searched-for `Block Number`:
 
 ```js
 import assert from "assert";
@@ -159,18 +160,19 @@ const rowLengthBytes = 64;
 const metadataOffsetBytes = rowLengthBytes;
 
 export function blockNumberToOffset(startBlockNumber, blockNumber) {
-	assert(
-		startBlockNumber <= blockNumber,
-		`startBlockNumber "${startBlockNumber}" must be less or equal than first block number "${blockNumber}"`
-	);
-	return (
-		metadataOffsetBytes + (blockNumber - startBlockNumber) * rowLengthBytes
-	);
+  assert(
+    startBlockNumber <= blockNumber,
+    `startBlockNumber "${startBlockNumber}" must be less or equal than first block number "${blockNumber}"`
+  );
+  return (
+    metadataOffsetBytes + (blockNumber - startBlockNumber) * rowLengthBytes
+  );
 }
 ```
 
-At the offset, a row is segmented into two a two-part pointer consisting of
-the `offset` and `length` of the data in the block file.
+At the calculated offset, a row is segmented into two a two-part pointer
+consisting of the `offset` and `length` of a variable-length piece of data in
+the block file. The type of this data is CIDv1 pointing to a **Child Node**.
 
 | Name     | Size     | Representation |
 | -------- | -------- | -------------- |
@@ -179,10 +181,11 @@ the `offset` and `length` of the data in the block file.
 
 ## Child Nodes
 
-By retrieving the `Child Node` identifier from a Root Node through e.g. the
-file system or a network, an equivalent row-based file format is implemented.
-Each row is 64 bytes long. With the first row (64 bytes) being reserved for
-metadata storage.
+Upon retrieving the child node from a network like IPFS, an similarily
+structured index and block file system is observed.
+
+In the index file, each row is 64 bytes long, with the first row being reserved
+for metadata storage.
 
 | Name           | Size     | Representation | Comment                                                |
 | -------------- | -------- | -------------- | ------------------------------------------------------ |
