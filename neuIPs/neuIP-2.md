@@ -13,25 +13,86 @@ that is created deterministically and without requiring network interaction.
 
 ## Motivation
 
-Developers working with NFTs on Ethereum require a chronologically-sorted file
-of all historic NFT minting events. To distribute neume network's indexed NFT
-data and to create a permanent metadata record for curation, a canonical and
-non-interactive index generation mechanism is required. It has to be
-deterministically-creatable to ensure the result's replicability and
-comprehendability. It cannot be dependent on network interaction, as otherwise
-dealing with node-dependent synchronicity and state increases complexity.
+Building an NFT explorer for Ethereum today requires a lot of special knowledge
+and a costly time commitment.
 
-However, we don't think requiring the file creation process to be consistent
-across the network such that any node's outcome must be a single file - rather
-we're aiming for an outcome's equivalence, namely that on a best-effort basis a
-node may publish an canonical network-compliant file of NFT metadata.
+To index and synchronize all respective NFT metadata (from EIP-721 and EIP-1155
+compliant contracts), starting at a block height, all logs are downloaded, and
+using EIP-165, a contract can be feature-tested for their interface support.
+Once clear NFT support has been established, an order system has to be
+determined for all NFT's `tokenId`. It is trivial in cases where an EIP-721
+contract implements the ERC721Enumerable extension. If it doesn't, the set of
+`tokenId`s has to be determined through event logs too. For each `tokenId` and
+contract address, a developer then calls `function tokenURI(...)`, receiving
+either an IPFS or HTTP URL that subsequently requires calling an additional
+server or node on the network. So building such an indexer today isn't an easy
+feat.
 
-Finally, we require the actual file's content to be laid out such that access
-to specific information is direct. This yields two requirements:
+But orthogonal to those technical challenges is the problem of spending a lot
+of time on a problem essentially already solved by the big NFT marketplaces.
+For example, Zora and OpenSea's API provide gleaming API documentations with
+all possible NFT metadata - almost indicative that only a fool would spend
+hundreds of hours and thousands of dollars on building their own NFT indexer.
 
-1. An NFT must deterministically translates to a position in the file.
-2. The index files must laid out such that there's an acceptable trade-off
-   between downloading one huge file or downloading many small files.
+Instead, especially when wanting to focus on building dApps - which mostly
+consist of front-end code - a marketplace provider's APIs fit well as they
+allow requests from a fully-fledged operating system and a user's browser. But
+not only that, they also keep their indexed data continuously up to date given
+the latest block data available on-chain. Meanwhile, building an NFT indexer
+that keeps synchronicity to (multiple) mainnet(s) is so challenging: None is
+currently publicly available as free software.
+
+It is why, feeling safely guarded by their indexer's moats, NFT marketplaces
+like OpenSea have not only started to engage in content moderation (dare we
+call it "censorship"!) - they're also adding proprietarily-generated curation
+signals not originally included in the on-chain anchored NFT's metadata. For
+anyone happily integrating with these "recentralizing" platforms today, this
+brings the risk of those in power pulling the rug by "embracing, extending and
+exstinguishing" integrators - or simply by eventually "dialing up
+monetization," making an integrator's dApp dependent on the existence of a
+functioning credit card on their billing dashboard and not on the decentralized
+substrates that are Ethereum and IPFS.
+
+Hence, developers working with NFTs on Ethereum require a
+chronologically-sorted file of all historic NFT events that can be downloaded
+freely and efficiently searched - without access to a full operating system: A
+browser must suffice.
+
+Instead of a vertically integrated monolithic backend, NFT developers require
+an intrinsically-incentivized ecosystem of node operators always keeping the
+chronological log of NFT metadata updated. Ideal, in such a permanent way that
+regular HTTP `tokenURI`s get made immutable by the network.
+
+Neume Network sets out to create just that - a permanent metadata record that
+developers may use for building interoperable NFT curation protocols. It
+achieves this by specifying and implementing a canonical and non-interactive
+index generation mechanism that ensures its replicability over a network.
+
+"Canonical" and "specified", such that many implementations are possible and to
+create transparency around the public good's functionality. "Non-interactive,"
+because dealing with node-dependent synchronicity and state increases
+complexity.
+
+Our vision is individual nodes publishing their indexing results publicly on
+IPFS leveraging a CID's permanence and composability qualities. For the scope
+of this specification, however, we're focusing on the first step towards
+specifying and building this rather complex architecture: We're describing the
+file format that underpins the Neume Network. Namely, that we require a file's
+content to be laid out such that access to specific information is direct and
+yields the following requirements:
+
+- Any node must be able to publish a self-descriptive NFT index file with
+  content-addressed integrity that comprehendably outlines a crawl's
+  performance.
+- Given an NFT's identifying metadata (e.g. contract address and `tokenId`,
+  they must deterministically translate to an offset in the file where an NFT's
+  full metadata resides.
+- The index file itself must be laid out such that there's an acceptable
+  trade-off between downloading one huge file or downloading many small files.
+  Generally, a user must be able to access the NFT index on their browser with
+  small restrictions.
+- All files and all links pointing inside and outside the index structure must
+  be permanent and ensure content-addressed file integrity.
 
 ## Specification
 
