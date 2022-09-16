@@ -30,6 +30,15 @@ contract Feed {
 - We strongly recommend all implementers to expose an additional [EIP-165](./eip-165.md) interface.
 - The input `string calldata uri` of `function release(...)` must be an URI as defined by RFC 3986.
 
+### NFT identification
+
+An NFT is identified by its compliance to [EIP-721](./eip-721.md), its address
+and its `uint256 tokenId` and can be represented as an URI:
+
+```
+nft://erc721:0x06012c8cf97BEaD5deAe237070F9587f8E7A266d/771769
+```
+
 ## Rationale
 
 - An `event NewTrack(...)` contains the two most vital components of a music NFT: `address curator` and a `string uri`.
