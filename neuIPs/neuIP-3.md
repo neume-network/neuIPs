@@ -26,9 +26,9 @@ Through publishing this specification, the neume network community is committing
 event NewSong(address contract, uint256 tokenId);
 ```
 
-- Although a song might be represented by many tokens, for all, the `event NewSong` must only be emitted once on the network and preferrably with its lowest locatable `uint256 tokenId`.
+- Although a song may be represented by many tokens the `event NewSong` must only be emitted once on the network and preferrably with its lowest findable `uint256 tokenId`.
 - Any `address contract` must comply with the EIP-721 or EIP-1155 Solidity interface standards or at the very least expose the `function tokenURI(uint256 tokenId) returns (string)`.
-- A token's metadata, returned through `function tokenURI(uint256 tokenId) returns (string)`must comply with the following JSON schema:
+- A token's metadata, returned through `function tokenURI(uint256 tokenId) returns (string)` must comply with the following JSON schema:
 
 ```
 {
@@ -93,15 +93,15 @@ event NewSong(address contract, uint256 tokenId);
 
 ## Rationale
 
-The neume network is based on an Extract, Transform and Load model where data source extraction is separated from transforming returned payloads to minimize the network-based tasks which arguably have the highest risk to fail and take the longest to complete.
+The neume network is based on an extract, transform and load model where data source extraction is separated from transforming returned payloads to minimize the network-based tasks which have the highest risk of failure and take the longest to complete.
 
 Still, it's uneconomical for the neume network developers to browse through all NFTs only to find individual ones to index. Particularly when it'd then also require to write custom JSON object transformers.
 
-We've hence decided to propose this standard for signaling new music NFT releases and we mandate a minimum viable JSON schema. And to return the favor to artists and their smart contract operators, upon comliance with the above standard, we're committing ourselves to optimistically index all unique songs on all EVM-based chains.
+We've hence decided to propose this standard for signaling new music NFT releases and we mandate a minimum viable JSON schema. And to return the favor to artists and their smart contract operators, upon compliance with the above standard, we're committing ourselves to optimistically index all unique songs on all EVM-based chains emitting the above event.
 
 ## Backwards Compatibility
 
-There are a number of music NFTs already minted with immutable metadata that won't be changable to comply with the above definitions. They may, however, be still submitted as `event NewSong` releases but may not be picked up by neume network in the first iterations of this standard's implementation. Over time, if yet a different but frequently-used metadata schema emerges, there is a good chance that the neume network developers are implementing its transform steps too.
+There are a number of music NFTs already minted with immutable metadata that won't be changable to comply with the above definitions. They may, however, be still submitted as `event NewSong(...)` releases but may not be picked up by the neume network in the first iterations of this standard's implementation. Over time, however, if yet a different but frequently-used metadata schema emerges, there is a good chance that the neume network developers are implementing its transform steps too.
 
 ## Security Considerations
 
