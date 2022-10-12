@@ -20,7 +20,7 @@ In the following, we are hence introducing a canoncial event for identifying an 
 
 ## Specification
 
-Through publishing this specification, the neume network community is committing to index all unique songs represented through music NFTS that are identied on-chain by emitting the following event:
+Through publishing this specification, the neume network community is committing itself to index all unique songs represented through music NFTS that are identified on-chain by emitting the following event:
 
 ```solidity
 event NewSong(address contract, uint256 tokenId);
