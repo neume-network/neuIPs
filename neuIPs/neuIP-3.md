@@ -10,7 +10,7 @@ created: 2022-09-16
 
 ## Abstract
 
-We introduce a canonical event for identifying a music NFT on EVM-based chains.
+We introduce a canonical event for identifying music NFTs on EVM-based chains.
 
 ## Motivation
 
