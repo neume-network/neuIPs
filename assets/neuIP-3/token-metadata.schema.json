@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/neume-network/neuIPs/blob/main/assets/neuIP-3/token-metadata.schema.json",
+  "title": "Token Metadata",
+  "description": "NFT token metadata for NewSong event",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "An identifier for the song, preferably in the form of <artist> — <title>.",
+      "pattern": "^(.+? [-—]+ )?.+$",
+      "$comment": "Modified from ERC721 Metadata JSON Schema."
+    },
+    "description": {
+      "type": "string",
+      "description": "A description for the song.",
+      "$comment": "Modified from ERC721 Metadata JSON Schema."
+    },
+    "image": {
+      "type": "string",
+      "description": "A URI pointing to a resource with mime type image/* providing the artwork for the song.",
+      "format": "uri",
+      "$comment": "Modified from ERC721 Metadata JSON Schema."
+    },
+    "animation_url": {
+      "type": "string",
+      "description": "A URI pointing to a resource with the mime type audio/* or video/* representing the song.",
+      "format": "uri",
+      "$comment": "Modified from OpenSea metadata standard."
+    },
+    "external_url": {
+      "type": "string",
+      "description": "A URI provided by the artist or minting platform.",
+      "format": "uri",
+      "$comment": "Modified from OpenSea metadata standard."
+    }
+  },
+  "required": [
+    "name",
+    "animation_url"
+  ]
+}
