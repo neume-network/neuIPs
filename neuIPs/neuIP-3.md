@@ -2,7 +2,7 @@
 eip: 3
 title: Music NFT Release Event
 description: A primitive to identify music NFTs on EVM chains.
-author: Tim Daubenschütz (@TimDaub), Kevin Neaton (@neatonk)
+author: Tim Daubenschütz (@TimDaub), Kevin Neaton (@neatonk), Vaughn McKenzie-Landell <@vaughnmck>
 discussions-to: https://github.com/neume-network/neuIPs/issues/4
 status: Draft
 created: 2022-09-16
