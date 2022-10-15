@@ -14,9 +14,13 @@ We introduce a canonical event for identifying music NFTs on EVM-based chains.
 
 ## Motivation
 
-Today, when musicians mint NFT collections on e.g. Ethereum then they unfortunately don't signal that their NFT contains music. This is a problem as regular machines cannot trivially differentiate between a mere audio NFT and an actual music NFT.
+Today, when musicians mint NFT collections on Ethereum they, unfortunately, don't signal that their NFT contains music. This is a problem as regular machines cannot trivially differentiate between a mere audio NFT and an actual music NFT.
 
-In the following, we are hence introducing a canoncial event for identifying an NFT as containing music.
+Currently, neume identifies music NFTs by indexing collections minted through popular music NFT services. Unfortunately, this biases Neume in favour of artists that mint through a small number of supported platforms and against those that mint using their own contracts.
+
+Artists should not be forced to mint through a supported platform to be indexed by neume.
+
+In the following, we introduce a canoncial event for identifying an NFT that contains music.
 
 ## Specification
 
@@ -95,7 +99,7 @@ event NewSong(address contract, uint256 tokenId);
 
 The neume network is based on an extract, transform and load model where data source extraction is separated from transforming returned payloads to minimize the network-based tasks which have the highest risk of failure and take the longest to complete.
 
-Still, it's uneconomical for the neume network developers to browse through all NFTs only to find individual ones to index. Particularly when it'd then also require to write custom JSON object transformers.
+Still, it's uneconomical for the neume network developers to browse through all NFTs only to find individual ones to index. Particularly when it then also requires them to write custom JSON object transformers.
 
 We've hence decided to propose this standard for signaling new music NFT releases and we mandate a minimum viable JSON schema. And to return the favor to artists and their smart contract operators, upon compliance with the above standard, we're committing ourselves to optimistically index all unique songs on all EVM-based chains emitting the above event.
 
