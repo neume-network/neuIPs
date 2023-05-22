@@ -57,7 +57,145 @@ Neume.
 
 ## Specification
 
-TODO
+The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”,
+“SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be
+interpreted as described in RFC 2119.
+
+### 1. Schema
+#### 1.1 Schema Definition
+A schema SHALL be defined as a JavaScript object that adheres to JSON Schema.
+Each schema SHOULD be exported from a standalone JavaScript or TypeScript file
+for utilization within Neume's node network and MAY define a subset of data
+within the network.
+
+Here is an example of a schema definition:
+
+```typescript
+const trackSchema = {
+  type: "object",
+  properties: {
+    title: {type: "string"},
+    artist: {type: "string"},
+    album: {type: "string"},
+    year: {type: "integer"},
+    source: {type: "string"}
+  },
+  required: ["title", "artist", "source"]
+};
+```
+#### 1.2 Schema Identification
+Each schema SHALL possess a unique identifier. This identifier SHALL be
+determined by generating a BLAKE3 hash of the canonicalized schema document
+using the `json-canonicalize` and `blake3` packages.
+
+```typescript
+import {hash} from 'blake3';
+import canonicalize from 'json-canonicalize';
+
+const schemaIdentifier = hash(canonicalize(trackSchema)).toString('hex');
+```
+
+#### 1.3 Schema Validation
+Candidate data items MUST be validated against the schema to determine set
+membership. The `ajv` and `ajv-formats` packages SHALL be used to validate data
+against the schema.
+
+```typescript
+import Ajv from "ajv";
+import addFormats from "ajv-formats";
+
+const ajv = new Ajv();
+addFormats(ajv);
+
+const validate = ajv.compile(trackSchema);
+
+const candidateDatum = {
+  title: "Smells Like Teen Spirit",
+  artist: "Nirvana",
+  album: "Nevermind",
+  year: 1991,
+  source: "Spotify"
+};
+
+if (!validate(candidateDatum)) {
+  console.log(validate.errors);
+} else {
+  console.log("Valid datum");
+}
+```
+
+#### 1.4 Schema Derivation
+A schema MAY be combined with a constraint schema to produce a constrained
+subset, therefore, deriving a more specific subset of data. The parameters for
+such constraint schemas MUST be included in the schema definition.
+
+```typescript
+const trackConstraintSchema = {
+  properties: {
+    year: {const: 1991},
+  },
+};
+
+const constrainedSchemaIdentifier = hash(
+  canonicalize(trackSchema) + canonicalize(trackConstraintSchema)
+).toString('hex');
+```
+
+### 2. Strategy
+#### 2.1 Strategy Definition
+A strategy SHALL be a JavaScript or TypeScript function that receives data
+conforming to an input schema and generates data conforming to an output
+schema. The strategy MUST be explicitly associated with its input and output
+schemas.
+
+```typescript
+class TrackStrategy {
+  static inputSchema = trackSchema;
+  static outputSchema = artistSchema;
+
+  static async execute(track) {
+    // Transform track to artist and validate against artistSchema
+  }
+}
+```
+
+#### 2.2 Strategy Parameterization
+A strategy MAY be parameterized in a manner similar to schemas, allowing it to
+be refined to a specific subset of the schema. For strategies that operate on
+schemas with common constraints, these strategies MUST be parameterized to
+accommodate such constraints. Parameters controlling the subset of data the
+strategy operates on SHOULD be accepted by the strategy. These parameters SHALL
+be included in the strategy definition.
+
+Here is an example of a strategy parameterization which takes a year as a constraint:
+
+```typescript
+class TrackStrategy {
+  static baseInputSchema = trackSchema;
+  static baseOutputSchema = artistSchema;
+
+  static inputSchema;
+  static outputSchema;
+
+  constructor(params) {
+    this.inputSchema = {...this.baseInputSchema, ...params};
+    this.outputSchema = {...this.baseOutputSchema, ...params};
+  }
+
+  static async execute(track) {
+    // validate input against inputSchema, transform track to artist, validate output against outputSchema
+  }
+}
+
+const trackStrategy1991 = new TrackStrategy(trackConstraintSchema);
+```
+
+### 3. Additional Requirements
+#### 3.1 Data Provenance
+Data items MUST include sufficient information to enable the source of the data
+to be validated. For data derived from a blockchain, this SHOULD include the
+CAIP-2 chain id for the blockchain, the contract address, and the token id. For
+other data types, the required provenance data will be specific to the source.
 
 ## Rationale
 
