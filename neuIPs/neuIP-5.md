@@ -10,50 +10,49 @@ created: 2023-05-22
 
 ## Abstract
 
-This NeuIP proposes a standard for defining, identifying, validating, and
-deriving subset schemas in Neume using JSON Schema and the JSON
-Canonicalization Scheme (JCS). This proposal introduces schemas as defining
-sets, each with a unique deterministic schema identifier. These identifiers
-play a crucial role in facilitating efficient subset reconciliation within
-Neume's decentralized network. The proposed standard supports improved data
-partitioning, dataset reconciliation, and execution orchestration, aligning
-with the vision of Neume as a credibly neutral network of decentralized nodes
-collaborating to produce a shared dataset.
+This neuIP proposes a standard for defining and identifying subset schemas in
+Neume, utilizing JSON Schema and the JSON Canonicalization Scheme (JCS). This
+proposal introduces schemas as defining sets—each with a unique deterministic
+identifier—wherein set membership is determined by schema validation and
+subsets may be explicitly partitioned using derived subset schemas. This
+proposed standard enhances data partitioning, subset reconciliation, and
+execution orchestration, in line with the vision of Neume as a credibly neutral
+network of decentralized nodes collaborating to produce a shared dataset.
 
 ## Motivation
 
-The motivation for this proposal is multifaceted, with the overarching
-objective of catalyzing Neume's evolution into a network, while serving the
-needs of a variety of applications and coping with the scale of the data we
-need in order to do so. To realize this vision, we require a robust mechanism
-to accurately identify and validate data subsets in a decentralized
-environment.
+The motivation for this proposal is multifaceted, with the primary objective of
+catalyizing Neume's evolution into a network capable of serving a variety of
+applications and handling the scale of the data required. To realize this
+vision, we need a robust mechanism to accurately identify and validate data
+subsets in a decentralized environment.
 
-At present, Neume lacks a deterministic methodology for identifying subsets and
-their schemas, making subset partitioning and reconciliation a challenge.
-Further, the project lacks an automatic method for optimizing and scheduling
-the execution of multiple strategies based on their input and output datasets.
-By introducing deterministic Schema Identifiers, this proposal provides a
-promising path to address these challenges and to tackle the escalating scale
-of data consumed by Neume.
+Currently, Neume lacks a deterministic method for identifying subsets and their
+schemas, which complicates subset partitioning and reconciliation.
+Additionally, the project lacks an automatic method for optimizing and
+scheduling the execution of multiple strategies based on their respective input
+and output datasets. This proposal provides a promising path to address these
+challenges by introducing deterministic Schema Identifiers, helping to manage
+the escalating scale of data consumed by Neume.
 
-This NeuIP addresses these limitations by proposing JSON Schema-based
-definitions, validations, derivations paired with deterministic identifiers
-using JCS. By using these identifiers, Neume nodes will be able to coordinate
-set reconciliation, validate candidate data against their schemas, orchestrate
-execution graphs based on their input and output datasets, and assemble ad-hoc
-strategy combinations for producing required output sets. In essence,
-deterministic Schema Identifiers are a crucial facilitator for Neume to scale
-efficiently, supporting flexible dataset partitioning and segmentation of the
-Neume schema into numerous, potentially overlapping, sub-schemas.
+This neuIP confronts these limitations by proposing JSON Schema-based
+definitions, validations, and derivations, paired with deterministic
+identifiers using JCS. By leveraging these identifiers, Neume nodes will be
+able to coordinate set reconciliation, validate candidate data against their
+schemas, orchestrate execution graphs based on their input and output datasets,
+and assemble ad-hoc strategy combinations for producing required output sets.
+Essentially, deterministic Schema Identifiers are a crucial facilitator for
+Neume to scale efficiently, supporting flexible dataset partitioning and
+segmentation of the Neume schema into numerous, potentially overlapping,
+sub-schemas.
 
-The benefits of this proposal align with the principles of social scalability,
-and decentralization, integral to the Neume project. Through the introduction
-of JSON Schema-based definitions, validations, derivations, and deterministic
-identifiers using JCS, we create a foundation for a network of independent
-nodes each operating on subsets of interest, while fostering Neume’s growth as
-a network. Thus, this NeuIP is the first step towards realizing our vision for
-Neume.
+The benefits of this proposal align with the principles of social scalability
+and decentralization, fundamental to the Neume project. By introducing JSON
+Schema-based definitions, validations, derivations, and deterministic
+identifiers using JCS, we establish a foundation for a network of independent
+nodes each operating on subsets of interest, promoting Neume’s growth as a
+network. As such, this neuIP marks a significant step towards realizing our
+vision for Neume.
 
 ## Specification
 
