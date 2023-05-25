@@ -3,7 +3,7 @@ neuIP: 5
 title: Subset Schema Definition and Identification using JSON Schema and JCS
 description: A method using JSON Schema and JCS to define and identify datasets within a decentralized network.
 author: Kevin Neaton <kevin@neaton.xyz>
-discussions-to: TBD
+discussions-to: https://github.com/orgs/neume-network/discussions/31
 status: Draft
 created: 2023-05-22
 ---
