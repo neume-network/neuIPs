@@ -11,48 +11,64 @@ created: 2023-05-22
 ## Abstract
 
 This neuIP proposes a standard for defining and identifying subset schemas in
-Neume, utilizing JSON Schema and the JSON Canonicalization Scheme (JCS). This
-proposal introduces schemas as defining sets—each with a unique deterministic
-identifier—wherein set membership is determined by schema validation and
-subsets may be explicitly partitioned using derived subset schemas. This
-proposed standard enhances data partitioning, subset reconciliation, and
-execution orchestration, in line with the vision of Neume as a credibly neutral
-network of decentralized nodes collaborating to produce a shared dataset.
+Neume, using JSON Schema and the JSON Canonicalization Scheme (JCS). The
+standard uses schemas as defining sets—each having a unique deterministic
+identifier—with set membership governed by schema validation.
+
+The standard promotes the use of derived schemas for clear subset partitioning.
+Additionally, the standard provides the foundation for subset reconciliation
+and ad-hoc strategy orchestration. This aligns with the vision of Neume as a
+credibly neutral, decentralized network of nodes, collaborating to produce a
+shared dataset.
 
 ## Motivation
 
-The motivation for this proposal is multifaceted, with the primary objective of
-catalyizing Neume's evolution into a network capable of serving a variety of
-applications and handling the scale of the data required. To realize this
-vision, we need a robust mechanism to accurately identify and validate data
-subsets in a decentralized environment.
+Neume Network was conceived with a vision to become a credibly neutral,
+decentralized network. The active participation of stakeholders in operating
+nodes is a crucial step towards realizing this vision. However, Neume has yet
+to fully embody this ideal. While set reconciliation and network expansion may
+already be feasible, centralization risk persists. This proposal outlines
+additional measures needed to catalyze Neume's evolution and foster its
+adoption as a decentralized network.
 
-Currently, Neume lacks a deterministic method for identifying subsets and their
-schemas, which complicates subset partitioning and reconciliation.
-Additionally, the project lacks an automatic method for optimizing and
-scheduling the execution of multiple strategies based on their respective input
-and output datasets. This proposal provides a promising path to address these
-challenges by introducing deterministic Schema Identifiers, helping to manage
-the escalating scale of data consumed by Neume.
+This proposal is for the builders. By reducing the operational burden of
+running a node and enhancing the benefits for those who do, it aims to position
+Neume as an attractive network for builders. In this vision, builder-operators
+can customize schemas and datasets, with node colocation and ownership offering
+further appeal.
 
-This neuIP confronts these limitations by proposing JSON Schema-based
-definitions, validations, and derivations, paired with deterministic
-identifiers using JCS. By leveraging these identifiers, Neume nodes will be
-able to coordinate set reconciliation, validate candidate data against their
-schemas, orchestrate execution graphs based on their input and output datasets,
-and assemble ad-hoc strategy combinations for producing required output sets.
-Essentially, deterministic Schema Identifiers are a crucial facilitator for
-Neume to scale efficiently, supporting flexible dataset partitioning and
-segmentation of the Neume schema into numerous, potentially overlapping,
-sub-schemas.
+The proposal indicates a transition from monolithic to atomic schemas, laying
+the groundwork for custom nodes with granular data requirements, app-specific
+schemas, and orchestrated execution. This approach enables builders to create
+and run nodes tailored to their app's specific needs. Moreover, the use of
+deterministic identifiers not only ensures schema immutability, preventing one
+node's schema additions and upgrades from impacting others, but also provides a
+unique label for effective coordination among nodes.
 
-The benefits of this proposal align with the principles of social scalability
-and decentralization, fundamental to the Neume project. By introducing JSON
-Schema-based definitions, validations, derivations, and deterministic
-identifiers using JCS, we establish a foundation for a network of independent
-nodes each operating on subsets of interest, promoting Neume’s growth as a
-network. As such, this neuIP marks a significant step towards realizing our
-vision for Neume.
+Without these changes, centralization risk arises as dedicated node operators
+offer data access for a fee, reducing builders to mere data consumers. This
+scenario—common in blockchain networks—leads to extractive business models,
+undermining Neume's vision and relevance, especially in light of the many
+high-quality cross-chain NFT APIs already available.
+
+However, when builders become operators, they enhance network decentralization
+and contribute value by developing apps that attract new users and generate
+novel data. These changes, though seemingly small, represent a significant
+step forward. By providing the means to deconstruct and decentralize Neume's
+schema, this proposal reinforces the vision of Neume as a credibly neutral,
+decentralized network of nodes, each contributing value through data.
+
+However, when builders become operators, they not only enhance network
+decentralization but also contribute significant value by producing and sharing
+data with the network. Their role is pivotal as they develop apps that attract
+new users and generate novel data, thereby driving the growth of the network.
+
+By providing the means to deconstruct and decentralize Neume's schema, this
+proposal reinforces the vision of Neume as a credibly neutral, decentralized
+network of nodes. This proposal is not just about structural changes to Neume,
+it also underscores the vital role of builder-operators, whose increased
+participation will drive the growth and decentralization of Neume, taking us
+closer to the vision of a truly decentralized network.
 
 ## Specification
 
