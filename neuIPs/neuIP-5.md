@@ -17,9 +17,7 @@ identifier—with set membership governed by schema validation.
 
 The standard promotes the use of derived schemas for clear subset partitioning.
 Additionally, the standard provides the foundation for subset reconciliation
-and ad-hoc strategy orchestration. This aligns with the vision of Neume as a
-credibly neutral, decentralized network of nodes, collaborating to produce a
-shared dataset.
+and ad-hoc strategy orchestration.
 
 ## Motivation
 
@@ -31,11 +29,10 @@ already be feasible, centralization risk persists. This proposal outlines
 additional measures needed to catalyze Neume's evolution and foster its
 adoption as a decentralized network.
 
-This proposal is for the builders. By reducing the operational burden of
-running a node and enhancing the benefits for those who do, it aims to position
-Neume as an attractive network for builders. In this vision, builder-operators
-can customize schemas and datasets, with node colocation and ownership offering
-further appeal.
+By reducing the operational burden of running a node and enhancing the benefits
+for those who do, it aims to position Neume as an attractive network for
+builders. In this vision, builder-operators can customize schemas and datasets,
+with node colocation and ownership offering further appeal.
 
 The proposal indicates a transition from monolithic to atomic schemas, laying
 the groundwork for custom nodes with granular data requirements, app-specific
@@ -53,22 +50,11 @@ high-quality cross-chain NFT APIs already available.
 
 However, when builders become operators, they enhance network decentralization
 and contribute value by developing apps that attract new users and generate
-novel data. These changes, though seemingly small, represent a significant
-step forward. By providing the means to deconstruct and decentralize Neume's
-schema, this proposal reinforces the vision of Neume as a credibly neutral,
-decentralized network of nodes, each contributing value through data.
-
-However, when builders become operators, they not only enhance network
-decentralization but also contribute significant value by producing and sharing
-data with the network. Their role is pivotal as they develop apps that attract
-new users and generate novel data, thereby driving the growth of the network.
-
-By providing the means to deconstruct and decentralize Neume's schema, this
-proposal reinforces the vision of Neume as a credibly neutral, decentralized
-network of nodes. This proposal is not just about structural changes to Neume,
-it also underscores the vital role of builder-operators, whose increased
-participation will drive the growth and decentralization of Neume, taking us
-closer to the vision of a truly decentralized network.
+novel data. These changes, though seemingly small, represent a significant step
+forward. By providing the means to deconstruct and decentralize Neume's schema,
+this proposal aims to enable new use cases and attract builder-operators to the
+network, resulting in a network that is credibly neutral and truly
+decentralized.
 
 ## Specification
 
